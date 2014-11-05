@@ -49,6 +49,8 @@ using namespace edm;
 using namespace reco;
 using namespace std; 
 
+const double mumass = .105658;
+
 class CloseVerticesProd : public edm::EDProducer {
    public:
       explicit CloseVerticesProd(const edm::ParameterSet&);
@@ -126,19 +128,22 @@ CloseVerticesProd::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
   auto_ptr<VertexCollection> vertexOutCollection(new VertexCollection());
   // loop on dimuons
   VertexCollection::iterator DimuonIt;
-  for (DimuonIt = DimuonVertexCollection.begin(); DimuonIt!= DimuonVertexCollection.end(); DimuonIt++) {
+  VertexCollection::iterator eDimuonIt;
+  for (DimuonIt = DimuonVertexCollection.begin(), eDimuonIt = DimuonVertexCollection.end(); DimuonIt != eDimuonIt; ++DimuonIt) {
     Vertex DimuonVertex = *DimuonIt;
     // check if the vertex actually consists of exactly two muon, throw exception if not
     //if (DimuonVertex.tracksSize() != 2) throw cms::Exception("BadLogic") << "the dimuon vertex must have exactly two muons by definition. Instead, it has " << DimuonVertex.tracksSize() << " tracks" << endl;
 
-    vector<pair<Double_t, Vertex> >  v_CosAngle_vertex;
+    TVector3 dimuonp3(DimuonVertex.p4(mumass).Px(), DimuonVertex.p4(mumass).Py(), DimuonVertex.p4(mumass).Pz());
+
+    vector<pair<Double_t, Vertex> > v_CosAngle_vertex;
 
     // loop on PVs
     VertexCollection::iterator PrimaryIt;
-    for (PrimaryIt = PrimaryVertexCollection.begin(); PrimaryIt!= PrimaryVertexCollection.end(); PrimaryIt++) {
+    VertexCollection::iterator ePrimaryIt;
+    for (PrimaryIt = PrimaryVertexCollection.begin(), ePrimaryIt = PrimaryVertexCollection.end(); PrimaryIt != ePrimaryIt; ++PrimaryIt) {
       Vertex PrimaryVertex = *PrimaryIt;
 
-      TVector3 dimuonp3(DimuonVertex.p4(.105658).Px(), DimuonVertex.p4(.105658).Py(), DimuonVertex.p4(.105658).Pz());
       TVector3 primaryp3(PrimaryVertex.p4().Px(), PrimaryVertex.p4().Py(), PrimaryVertex.p4().Pz());
 
       Double_t CosAngle = TMath::Cos(dimuonp3.Angle(primaryp3));
