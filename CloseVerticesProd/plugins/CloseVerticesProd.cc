@@ -138,7 +138,7 @@ CloseVerticesProd::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     for (PrimaryIt = PrimaryVertexCollection.begin(); PrimaryIt!= PrimaryVertexCollection.end(); PrimaryIt++) {
       Vertex PrimaryVertex = *PrimaryIt;
 
-      TVector3 dimuonp3(DimuonVertex.p4().Px(), DimuonVertex.p4().Py(), DimuonVertex.p4().Pz());
+      TVector3 dimuonp3(DimuonVertex.p4(.105658).Px(), DimuonVertex.p4(.105658).Py(), DimuonVertex.p4(.105658).Pz());
       TVector3 primaryp3(PrimaryVertex.p4().Px(), PrimaryVertex.p4().Py(), PrimaryVertex.p4().Pz());
 
       Double_t CosAngle = TMath::Cos(dimuonp3.Angle(primaryp3));
